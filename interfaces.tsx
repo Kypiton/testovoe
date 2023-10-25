@@ -11,6 +11,15 @@ export interface IDataItem {
   phone_number: string;
 }
 
+export interface IDataList extends Array<IDataItem> {}
+
+export interface IDataResponse {
+  count?: number | null;
+  next?: string;
+  previous?: string;
+  results?: any;
+}
+
 export interface ICol {
   id: number;
   name: string;

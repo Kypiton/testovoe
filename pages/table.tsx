@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IDataItem, ICol } from '@/interfaces';
+import { IDataItem, ICol, IDataResponse } from '@/interfaces';
 import { colName } from '@/mock/data';
 import { AxiosResponse } from 'axios';
 import { getTableData, updateTableData } from '@/api';
@@ -26,9 +26,11 @@ const TablePage: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const response: AxiosResponse<IDataItem[]> = await getTableData(offset);
-      console.log(response);
-      setData(response.data.results);
+      const { data }: AxiosResponse<IDataResponse> = await getTableData(offset);
+      const results = data.results;
+      if (results) {
+        setData(results);
+      }
       setLoading(false);
     } catch (error) {
       console.error('Error:', error);
