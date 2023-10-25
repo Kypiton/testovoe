@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
 import { IUser } from '@/interfaces';
-import { setCredentials, RootState } from '@/store/store';
+import { loginUser } from '@/api';
+import { useDispatch } from 'react-redux';
+import { RootState, setCredentials } from '../store/store';
+import { useSelector } from 'react-redux';
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [user, setUser] = useState<IUser>({
     username: '',
     password: '',
   });
   const [error, setError] = useState<string>('');
-  const dispatch = useDispatch();
-  const credentials = useSelector((state: RootState) => state.credentials);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof IUser) => {
     setUser({ ...user, [field]: e.target.value });
@@ -23,8 +24,18 @@ const LoginPage: React.FC = () => {
       setError('Fields are empty');
       return;
     }
-    dispatch(setCredentials(credentials.username, credentials.password));
-    router.push('/table');
+    try {
+      const response = await loginUser(user);
+      if (response.status === 200) {
+        dispatch(setCredentials(user.username, user.password));
+        router.push('/table');
+      } else {
+        setError('Incorrect username or password');
+      }
+    } catch (error) {
+      console.error('Username error:', error);
+      setError('Incorrect username or password');
+    }
   };
 
   return (

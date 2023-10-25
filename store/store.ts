@@ -37,14 +37,12 @@ export const setCredentials = (username: string, password: string) => ({
   payload: { username, password },
 });
 
-// Combine reducers
 const rootReducer = combineReducers({
   credentials: credentialsReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
 
-// Create store
 const store = legacy_createStore(rootReducer);
 
 export default store;

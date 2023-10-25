@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { IDataItem, ICol, IDataResponse } from '@/interfaces';
+import { IDataItem, ICol, IDataResponse, IDataList } from '@/interfaces';
 import { colName } from '@/mock/data';
+import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 import { AxiosResponse } from 'axios';
 import { getTableData, updateTableData } from '@/api';
+import { RootState } from '@/store/store';
 
 const TablePage: React.FC = () => {
-  const [data, setData] = useState<IDataItem[]>([]);
+  const [data, setData] = useState<IDataList>([]);
+  const storeData = useSelector((state: RootState) => state.credentials);
+  console.log(storeData);
+
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const [offset, setOffset] = useState<number>(0);
   const formatBirthdayDate = (date: string): string => {
@@ -27,7 +34,9 @@ const TablePage: React.FC = () => {
   const fetchData = async () => {
     try {
       const { data }: AxiosResponse<IDataResponse> = await getTableData(offset);
+
       const results = data.results;
+
       if (results) {
         setData(results);
       }
@@ -77,6 +86,9 @@ const TablePage: React.FC = () => {
   };
 
   useEffect(() => {
+    const { password, username } = storeData;
+
+    if (!password && !username) router.push('/');
     fetchData();
   }, [offset]);
 
@@ -121,7 +133,10 @@ const TablePage: React.FC = () => {
                         editedData.id === item.id ? editedData.birthday_date : item.birthday_date
                       }
                       onChange={e =>
-                        setEditedData({ ...editedData, birthday_date: e.target.value })
+                        setEditedData({
+                          ...editedData,
+                          birthday_date: e.target.value,
+                        })
                       }
                     />
                   </td>
@@ -131,7 +146,12 @@ const TablePage: React.FC = () => {
                       value={
                         editedData.id === item.id ? editedData.phone_number : item.phone_number
                       }
-                      onChange={e => setEditedData({ ...editedData, phone_number: e.target.value })}
+                      onChange={e =>
+                        setEditedData({
+                          ...editedData,
+                          phone_number: e.target.value,
+                        })
+                      }
                     />
                   </td>
                   <td>
