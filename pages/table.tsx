@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
-interface IDataItem {
-  id: number | null;
-  name: string;
-  email: string;
-  birthday_date: string;
-  phone_number: string;
-}
+import { IDataItem, ICol } from '@/interfaces';
+import { colName } from '@/mock/data';
+import { AxiosResponse } from 'axios';
+import { getTableData, updateTableData } from '@/api';
 
 const TablePage: React.FC = () => {
   const [data, setData] = useState<IDataItem[]>([]);
@@ -21,10 +16,6 @@ const TablePage: React.FC = () => {
     return `${year}-${month}-${day}`;
   };
 
-  const api = axios.create({
-    baseURL: 'https://technical-task-api.icapgroupgmbh.com/api',
-  });
-
   const [editedData, setEditedData] = useState<IDataItem>({
     id: null,
     name: '',
@@ -35,7 +26,8 @@ const TablePage: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const response = await api.get(`/table/?offset=${offset}`);
+      const response: AxiosResponse<IDataItem[]> = await getTableData(offset);
+      console.log(response);
       setData(response.data.results);
       setLoading(false);
     } catch (error) {
@@ -61,9 +53,14 @@ const TablePage: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      const updateUrl = `/table/${editedData.id}/`;
+      const updatedData: Partial<IDataItem> = {
+        name: editedData.name,
+        email: editedData.email,
+        birthday_date: editedData.birthday_date,
+        phone_number: editedData.phone_number,
+      };
 
-      await api.put(updateUrl, editedData);
+      await updateTableData(editedData.id, updatedData);
       setEditedData({
         id: null,
         name: '',
@@ -91,21 +88,11 @@ const TablePage: React.FC = () => {
           <table className='w-full text-sm text-left text-gray-500 dark:text-gray-400'>
             <thead className='text-xs text-gray-700 uppercase'>
               <tr>
-                <th scope='col' className='px-6 py-3'>
-                  Name
-                </th>
-                <th scope='col' className='px-6 py-3'>
-                  Email
-                </th>
-                <th scope='col' className='px-6 py-3'>
-                  Date
-                </th>
-                <th scope='col' className='px-6 py-3'>
-                  Phone
-                </th>
-                <th scope='col' className='px-6 py-3'>
-                  Actions
-                </th>
+                {colName.map((item: ICol) => (
+                  <th key={item.id} scope='col' className='px-6 py-3'>
+                    {item.name}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>

@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
-
-interface IUser {
-  username: string;
-  password: string;
-}
+import { IUser } from '@/interfaces';
+import { loginUser } from '@/api';
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
@@ -25,8 +21,7 @@ const LoginPage: React.FC = () => {
       return;
     }
     try {
-      const loginUrl = 'https://technical-task-api.icapgroupgmbh.com/api/login/';
-      const response = await axios.post(loginUrl, user);
+      const response = await loginUser(user);
       if (response.status === 200) {
         router.push('/table');
       } else {
@@ -41,22 +36,24 @@ const LoginPage: React.FC = () => {
   return (
     <div className='text-center mt-10'>
       <h1>Log In</h1>
-      <input
-        type='text'
-        placeholder='Логін'
-        value={user.username}
-        onChange={e => handleInputChange(e, 'username')}
-        className='border-2 outline-none p-2'
-      />
-      <br />
-      <input
-        type='password'
-        placeholder='Пароль'
-        value={user.password}
-        onChange={e => handleInputChange(e, 'password')}
-        className='border-2 outline-none p-2 mt-2'
-      />
-      <br />
+      <div>
+        <input
+          type='text'
+          placeholder='Логін'
+          value={user.username}
+          onChange={e => handleInputChange(e, 'username')}
+          className='border-2 outline-none p-2'
+        />
+      </div>
+      <div>
+        <input
+          type='password'
+          placeholder='Пароль'
+          value={user.password}
+          onChange={e => handleInputChange(e, 'password')}
+          className='border-2 outline-none p-2 mt-2'
+        />
+      </div>
       <button onClick={handleLogin} className='bg-indigo-500 text-white p-4 w-48 mt-2'>
         Log In
       </button>
