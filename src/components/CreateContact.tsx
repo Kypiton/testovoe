@@ -9,7 +9,7 @@ const CreateContact: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName && !lastName) {
+    if (!firstName || !lastName) {
       alert('Either first name or last name is required');
       return;
     }

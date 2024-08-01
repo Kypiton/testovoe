@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { IAddTags, IContact, INewContact } from '../types/contacts.interface';
+// import type { IAddTags, IContact, INewContact } from '../types/contacts.interface';
 
 const apiKey = 'VlP9cwH6cc7Kg2LsNPXpAvF6QNmgZn';
 
@@ -12,19 +12,20 @@ export const contactsApi = createApi({
 		prepareHeaders: (headers) => {
 			headers.set('Authorization', `Bearer ${apiKey}`);
 			headers.set('Cache-Control', 'no-cache');
+			headers.set('Content-Type', 'application/json');
 			return headers;
 		},
 	}),
 	tagTypes,
 	endpoints: (builder) => ({
-		getContacts: builder.query<any, void>({
+		getContacts: builder.query<any, any>({
 			query: () => ({
 				url: '/contacts',
 				params: { sort: 'created:desc' },
 			}),
 			providesTags: ['Contacts'],
 		}),
-		getContactById: builder.query<IContact, string>({
+		getContactById: builder.query<any, any>({
 			query: (id) => `contact/${id}`,
 		}),
 		createContact: builder.mutation<any, any>({
@@ -35,19 +36,20 @@ export const contactsApi = createApi({
 			}),
 			invalidatesTags: ['Contacts'],
 		}),
-		deleteContact: builder.mutation<{ success: boolean }, string>({
+		deleteContact: builder.mutation<{ success: boolean }, any>({
 			query: (id) => ({
 				url: `contact/${id}`,
 				method: 'DELETE',
 			}),
 			invalidatesTags: ['Contacts']
 		}),
-		addTagsToContact: builder.mutation<void, IAddTags>({
+		addTagsToContact: builder.mutation<void, { id: string; tags: { id: string; tag: string }[] }>({
 			query: ({ id, tags }) => ({
 				url: `contact/${id}/tags`,
 				method: 'PUT',
 				body: { tags },
 			}),
+			invalidatesTags: ['Contacts']
 		}),
 	}),
 });

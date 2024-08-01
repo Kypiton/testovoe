@@ -1,16 +1,17 @@
 import React from 'react';
-import { useDeleteContactMutation, useGetContactsQuery } from '../services/contacts';
-import CreateContact from './CreateContact';
+import { useNavigate } from 'react-router-dom';
+import { useGetContactsQuery, useDeleteContactMutation } from '../services/contacts';
 
 const ContactList: React.FC = () => {
   const { data, error, isLoading } = useGetContactsQuery();
   const [deleteContact] = useDeleteContactMutation();
+  const navigate = useNavigate();
 
-  const handleDelete = async (contactId: string) => {
+  const handleDeleteContact = async (id: string) => {
     try {
-      await deleteContact(contactId).unwrap();
+      await deleteContact(id).unwrap();
     } catch (err) {
-      console.error(err);
+      console.error('Failed to delete contact:', err);
     }
   };
 
@@ -19,36 +20,41 @@ const ContactList: React.FC = () => {
 
   return (
     <div className='container mx-auto p-4'>
-      <CreateContact />
       <h1 className='text-2xl font-bold mb-4'>Contacts</h1>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-        {data?.resources.map((contact: any) => (
-          <div key={contact.id} className='bg-white p-4 rounded shadow-md'>
-            <img src={contact.avatar_url} alt='avatar' className='w-16 h-16 rounded-full mx-auto' />
-            <h2 className='text-xl font-bold mt-4'>
-              Name: {contact.fields?.['first name']?.[0]?.value}
-              <br />
-              Last name: {contact.fields?.['last name']?.[0]?.value}
-            </h2>
-            <p className='text-gray-600'>{contact.fields?.email?.[0]?.value}</p>
-            <div className='mt-2'>
-              {contact.tags?.map((tag: any) => (
-                <span
-                  key={tag.id}
-                  className='bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded'
-                >
-                  {tag.tag}
-                </span>
-              ))}
-            </div>
-            <button
-              onClick={() => handleDelete(contact.id)}
-              className='mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700'
+        {data?.resources?.map((contact: any) => {
+          const firstName = contact.fields?.['first name']?.[0]?.value || 'Unknown';
+          const lastName = contact.fields?.['last name']?.[0]?.value || 'Unknown';
+          const email = contact.fields?.['email']?.[0]?.value || 'No Email';
+          const avatarUrl = contact.avatar_url || 'default-avatar.png'; // Use a default avatar URL
+          const tags = contact.tags?.map((tag: any) => tag.tag).join(', ') || 'No Tags';
+
+          return (
+            <div
+              key={contact.id}
+              className='p-4 border rounded shadow hover:bg-gray-100 cursor-pointer'
             >
-              Delete
-            </button>
-          </div>
-        ))}
+              <div onClick={() => navigate(`/contact/${contact.id}`)}>
+                <img
+                  src={avatarUrl}
+                  alt={`${firstName} ${lastName}`}
+                  className='w-16 h-16 rounded-full mx-auto'
+                />
+                <h3 className='text-xl text-center mt-2'>
+                  {firstName} {lastName}
+                </h3>
+                <p className='text-center'>{email}</p>
+                <div className='text-center'>{tags}</div>
+              </div>
+              <button
+                onClick={() => handleDeleteContact(contact.id)}
+                className='mt-4 w-full inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+              >
+                Delete Contact
+              </button>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
