@@ -27,7 +27,7 @@ export const contactsApi = createApi({
 		getContactById: builder.query<IContact, string>({
 			query: (id) => `contact/${id}`,
 		}),
-		createContact: builder.mutation<IContact, Partial<INewContact>>({
+		createContact: builder.mutation<any, any>({
 			query: (newContact) => ({
 				url: 'contact',
 				method: 'POST',

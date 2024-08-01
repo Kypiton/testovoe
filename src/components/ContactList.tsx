@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDeleteContactMutation, useGetContactsQuery } from '../services/contacts';
+import CreateContact from './CreateContact';
 
 const ContactList: React.FC = () => {
   const { data, error, isLoading } = useGetContactsQuery();
@@ -18,6 +19,7 @@ const ContactList: React.FC = () => {
 
   return (
     <div className='container mx-auto p-4'>
+      <CreateContact />
       <h1 className='text-2xl font-bold mb-4'>Contacts</h1>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
         {data?.resources.map((contact: any) => (
