@@ -1,0 +1,17 @@
+[build]
+  # Указываем команду для сборки
+  command = "vite build"
+
+  # Указываем директорию, где находятся собранные файлы
+  publish = "dist"
+
+[dev]
+  # Настройки для локального дев-сервера на Netlify
+  functions = "netlify/functions"
+
+[[redirects]]
+  # Настройка прокси для API
+  from = "/api/v1/*"
+  to = "https://live.devnimble.com/api/v1/:splat"
+  status = 200
+  force = true
