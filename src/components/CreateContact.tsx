@@ -33,7 +33,6 @@ const CreateContact: React.FC = () => {
           email: [{ value: email, modifier: '', label: 'email' }],
         },
       }).unwrap();
-      // Clear the form
       setFirstName('');
       setLastName('');
       setEmail('');

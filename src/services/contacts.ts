@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-// import type { IAddTags, IContact, INewContact } from '../types/contacts.interface';
 
 const apiKey = 'VlP9cwH6cc7Kg2LsNPXpAvF6QNmgZn';
 
@@ -45,9 +44,12 @@ export const contactsApi = createApi({
 		}),
 		addTagsToContact: builder.mutation<void, { id: string; tags: { id: string; tag: string }[] }>({
 			query: ({ id, tags }) => ({
-				url: `contact/${id}/tags`,
+				url: `contacts/${id}/tags`,
 				method: 'PUT',
-				body: { tags },
+				body: {
+					tags,
+					contact_id: id
+				},
 			}),
 			invalidatesTags: ['Contacts']
 		}),
