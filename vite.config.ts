@@ -12,7 +12,7 @@ export default defineConfig({
       '/api/v1': {
         target: 'https://live.devnimble.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
         rewrite: (path) => path.replace(/^\/api\/v1/, '/api/v1'),
       },
     },
