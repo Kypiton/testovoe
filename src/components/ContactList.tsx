@@ -5,7 +5,7 @@ import CreateContact from './CreateContact';
 import './ContactList.css';
 
 const ContactList: React.FC = () => {
-  const { data, error, isLoading } = useGetContactsQuery();
+  const { data, error, isLoading } = useGetContactsQuery(undefined);
   const [deleteContact] = useDeleteContactMutation();
   const navigate = useNavigate();
 

@@ -17,14 +17,6 @@ const ContactPage: React.FC = () => {
 
     if (tagsArray.length > 0) {
       try {
-        const formattedTags = tagsArray.map(tag => ({
-          id: tag,
-          tag,
-        }));
-
-        console.log(`Adding tags to: ${id}`);
-        console.log('Tags payload:', formattedTags);
-
         await addTags({ id: id!, tags: tagsArray }).unwrap();
         setNewTags('');
       } catch (err) {
