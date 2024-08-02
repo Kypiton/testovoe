@@ -53,7 +53,18 @@ const ContactPage: React.FC = () => {
             {firstName} {lastName}
           </h2>
           <p className='text-lg mt-2'>{email}</p>
-          <div className='text-lg mt-2'>{tags.map((tag: any) => tag.tag).join(', ')}</div>
+          <div className='text-lg mt-2'>
+            Tags:
+            <br />
+            <span className='text-gray-500'>
+              {tags.map((tag: any, index: number) => (
+                <React.Fragment key={tag.id}>
+                  <span className='bg-slate-300 text-black rounded-md p-0.5 my-2'>{tag.tag}</span>
+                  {index < tags.length - 1 && ', '}
+                </React.Fragment>
+              ))}
+            </span>
+          </div>
 
           <form onSubmit={handleAddTags} className='mt-4 w-full max-w-sm'>
             <input
