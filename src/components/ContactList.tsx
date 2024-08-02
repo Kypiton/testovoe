@@ -21,7 +21,7 @@ const ContactList: React.FC = () => {
   if (error) return <div>Error: {error.toString()}</div>;
 
   return (
-    <div className='container mx-auto p-4 flex flex-col md:flex-row gap-4'>
+    <div className='mx-auto p-4 flex flex-col md:flex-row gap-4 min-w-[400px] max-w-[1280px]'>
       <div className='w-full md:w-1/3 md:sticky md:top-0'>
         <CreateContact />
       </div>

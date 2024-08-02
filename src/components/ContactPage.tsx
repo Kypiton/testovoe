@@ -42,7 +42,7 @@ const ContactPage: React.FC = () => {
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
-      <div className='bg-white p-6 shadow-md rounded-md w-full max-w-md'>
+      <div className='bg-white p-6 shadow-md rounded-md w-full max-w-md min-w-[400px]'>
         <div className='flex flex-col items-center'>
           <img
             src={contactData.avatar_url}
